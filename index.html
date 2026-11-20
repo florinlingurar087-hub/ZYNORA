@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZYNORA</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080912;color:white;font-family:Arial,sans-serif}
+header{padding:22px 12px;text-align:center;background:#121126;border-bottom:1px solid #493070}
+.logo{font-size:32px;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,#00e5ff,#b15cff);background-clip:text;-webkit-background-clip:text;color:transparent}
+small{color:#aaa0c8}
+main{padding:16px 14px 100px;max-width:600px;margin:auto}
+h2{text-align:center;font-size:22px}
+.video{height:340px;border:1px solid #8e4af5;border-radius:22px;background:linear-gradient(145deg,#211337,#0b1024);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:15px;text-align:center}
+.play{font-size:65px;color:#00e5ff}
+button{cursor:pointer;border:0;color:white;font-weight:bold}
+.like{background:#342147;padding:14px;border-radius:15px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{background:#1c1a35;border:1px solid #47336b;border-radius:16px;padding:20px 8px;text-align:center}
+.tile span{display:block;font-size:32px;margin-bottom:10px}
+.panel{text-align:center;padding:75px 15px}
+.panel .emoji{font-size:70px}
+p{color:#aaa8c0;line-height:1.6}
+nav{position:fixed;bottom:0;left:0;right:0;background:#121126;display:flex;justify-content:space-around;align-items:center;padding:13px 2px;padding-bottom:max(13px,env(safe-area-inset-bottom))}
+nav button{background:none;font-size:11px;min-width:55px}
+nav span{display:block;font-size:25px;margin-bottom:5px}
+nav .plus{background:#00e5ff;color:#080912;border-radius:12px;font-size:30px;padding:7px 17px}
+.action{background:#8b4cf5;padding:14px 22px;border-radius:12px;margin-top:15px}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">⚡ ZYNORA</div>
+<small>Connect. Create. Explore.</small>
+</header>
+<main id="app"></main>
+<nav>
+<button onclick="show('Acasă')"><span>⌂</span>Acasă</button>
+<button onclick="show('Descoperă')"><span>⌕</span>Descoperă</button>
+<button class="plus" onclick="show('Creează')">＋</button>
+<button onclick="show('Mesaje')"><span>✉</span>Mesaje</button>
+<button onclick="show('Profil')"><span>♙</span>Profil</button>
+</nav>
+<script>
+let likes=0;
+const features=[
+['📞','Apeluri'],['💬','Mesaje'],
+['🌍','ZYNORA World'],['🤖','AI Studio'],
+['🌐','AI Translate'],['🎉','ZYNORA Party'],
+['🏆','ZYNORA Battle'],['🔴','LIVE'],
+['👨‍👩‍👧','Family'],['⏳','Time Capsule']
+];
+const app=document.getElementById('app');
+function show(page){
+if(page==='Acasă'||page==='Descoperă'){
+app.innerHTML=`
+<h2>${page==='Acasă'?'Pentru tine':'Descoperă ZYNORA'}</h2>
+<div class="video">
+<div class="play">▶</div>
+<strong>Bine ai venit pe ZYNORA!</strong>
+<p>Viitorul videoclipurilor sociale</p>
+<button class="like" onclick="addLike()">❤️ <b id="count">${likes}</b> Like</button>
+</div>
+<h2>Funcțiile ZYNORA</h2>
+<div class="grid">
+${features.map(f=>`<button class="tile" onclick="show('${f[1]}')"><span>${f[0]}</span>${f[1]}</button>`).join('')}
+</div>`;
+}else if(page==='Creează'){
+app.innerHTML=`<div class="panel"><div class="emoji">🎥</div>
+<h2>Creează un videoclip</h2>
+<p>Alege un videoclip din galeria Samsung.</p>
+<input id="videoInput" type="file" accept="video/*" style="max-width:100%">
+<div id="preview"></div>
+</div>`;
+document.getElementById('videoInput').addEventListener('change',e=>{
+const file=e.target.files[0];
+if(!file)return;
+const url=URL.createObjectURL(file);
+document.getElementById('preview').innerHTML=
+'<video controls playsinline style="width:100%;margin-top:20px;border-radius:15px" src="'+url+'"></video><p>Videoclip de test. Nu este publicat online.</p>';
+});
+}else if(page==='Profil'){
+app.innerHTML=`<div class="panel"><div class="emoji">👑</div>
+<h2>Profil ZYNORA</h2><p>@creator</p>
+<strong>0 urmăritori • 0 videoclipuri</strong></div>`;
+}else{
+const item=features.find(f=>f[1]===page);
+app.innerHTML=`<div class="panel"><div class="emoji">${item?item[0]:'✨'}</div>
+<h2>${page}</h2>
+<p>Funcția este în pregătire. Momentan aceasta este o demonstrație.</p>
+<button class="action" onclick="show('Acasă')">Înapoi acasă</button>
+</div>`;
+}
+window.scrollTo(0,0);
+}
+function addLike(){
+likes++;
+document.getElementById('count').textContent=likes;
+}
+show('Acasă');
+</script>
+</body>
+</html>
